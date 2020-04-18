@@ -24,8 +24,9 @@ START_NAMESPACE_DISTRHO
 #define PARAM_MASTERMIX 3
 
 #define NUM_PARAMS 4
-#define NUM_SATURATIONS 1
+#define NUM_SATURATIONS 2
 #include "sat0.h"
+#include "sat1.h"
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -214,6 +215,7 @@ protected:
 
         case PARAM_TYPE:
             param_type = value;
+            param_type_int = (int)value;
             break;
 
         case PARAM_MASTERVOLUME:
@@ -249,13 +251,30 @@ protected:
         const float *x;
         float *y;
 
-        float p0 = sat0_coeffs[(int)param_saturation][0];
-        float p1 = sat0_coeffs[(int)param_saturation][1];
-        float p2 = sat0_coeffs[(int)param_saturation][2];
-        float p3 = sat0_coeffs[(int)param_saturation][3];
-        float p4 = sat0_coeffs[(int)param_saturation][4];
-        float bp = p2 - p1*p2/p0;
-        float bn = p4 - p3*p4/p0;
+        float p0;
+        float p1;
+        float p2;
+        float p3;
+        float p4;
+        float bp;
+        float bn;
+
+        switch (param_type_int) {
+        case 0:
+            p0 = sat0_coeffs[(int)param_saturation][0];
+            p1 = sat0_coeffs[(int)param_saturation][1];
+            p2 = sat0_coeffs[(int)param_saturation][2];
+            p3 = sat0_coeffs[(int)param_saturation][3];
+            p4 = sat0_coeffs[(int)param_saturation][4];
+            bp = p2 - p1*p2/p0;
+            bn = p4 - p3*p4/p0;
+            break;
+        case 1:
+            p0 = sat1_coeffs[(int)param_saturation][0];
+            p1 = sat1_coeffs[(int)param_saturation][1];
+            p2 = sat1_coeffs[(int)param_saturation][2];
+            break;
+        };
 
         for (uint32_t ch = 0; ch < 2; ch++) {
             x = inputs[ch];
@@ -263,12 +282,24 @@ protected:
 
             for (uint32_t n = 0; n < frames; n++) {
                 // Apply saturation
-                y[n] = p0*x[n];
-                if (y[n] > p2) {
-                    y[n] = p1*x[n] + bp;
-                }
-                else if (y[n] < p4) {
-                    y[n] = p3*x[n] + bn;
+
+                switch (param_type_int) {
+                case 0:
+                    y[n] = p0*x[n];
+                    if (y[n] > p2) {
+                        y[n] = p1*x[n] + bp;
+                    }
+                    else if (y[n] < p4) {
+                        y[n] = p3*x[n] + bn;
+                    }
+                    break;
+
+                case 1:
+                    y[n] = x[n] / (p1 + p0*std::abs(x[n])) + p2*std::abs(x[n]);
+                    break;
+
+                default:
+                    y[n] = x[n];
                 }
 
                 // Mix wet and dry signal
@@ -297,6 +328,7 @@ private:
 
     float param_saturation;
     float param_type;
+    int param_type_int;
     float param_mastervolume;
     float param_mastervolume_lin;
     float param_mastermix;
