@@ -20,7 +20,7 @@ START_NAMESPACE_DISTRHO
 
 #define PARAM_SATURATION 0
 #define PARAM_TYPE 1
-#define PARAM_MASTERVOLUME 2 
+#define PARAM_MASTERVOLUME 2
 #define PARAM_MASTERMIX 3
 
 #define NUM_PARAMS 4
@@ -250,17 +250,17 @@ protected:
     */
     void run(const float** inputs, float** outputs, uint32_t frames) override
     {
-        const float *x;
-        float *y;
-        float s;
+        float x = 0.0;
+        float y = 0.0;
+        float s = 0.0;
 
-        float p0;
-        float p1;
-        float p2;
-        float p3;
-        float p4;
-        float bp;
-        float bn;
+        float p0 = 0.0;
+        float p1 = 0.0;
+        float p2 = 0.0;
+        float p3 = 0.0;
+        float p4 = 0.0;
+        float bp = 0.0;
+        float bn = 0.0;
 
         switch (param_type_int) {
         case 0:
@@ -295,62 +295,64 @@ protected:
         };
 
         for (uint32_t ch = 0; ch < 2; ch++) {
-            x = inputs[ch];
-            y = outputs[ch];
-
             for (uint32_t n = 0; n < frames; n++) {
-                // Apply saturation
+                x = inputs[ch][n];
+                y = 0;
 
+                // Apply saturation
                 switch (param_type_int) {
                 case 0:
-                    y[n] = p0*x[n];
-                    if (y[n] > p2) {
-                        y[n] = p1*x[n] + bp;
+                    y = p0*x;
+                    if (y > p2) {
+                        y = p1*x + bp;
                     }
-                    else if (y[n] < p4) {
-                        y[n] = p3*x[n] + bn;
+                    else if (y < p4) {
+                        y = p3*x + bn;
                     }
                     break;
 
                 case 1:
-                    y[n] = x[n] / (p1 + p0*std::abs(x[n])) + p2*std::abs(x[n]);
+                    y = x / (p1 + p0*std::abs(x)) + p2*std::abs(x);
                     break;
 
                 case 2:
-                    s = p0 * x[n];
+                    s = p0 * x;
                     if (s < -0.6) {
-                        y[n] = p1*s*s + p2*s + p3;
+                        y = p1*s*s + p2*s + p3;
                     }
                     else if (s > 0.6) {
-                        y[n] = (-p1)*s*s + p2*s + (-p3);
+                        y = (-p1)*s*s + p2*s + (-p3);
                     }
                     else {
-                        y[n] = s;
+                        y = s;
                     }
                     break;
 
                 case 3:
-                    s = p0*x[n];
+                    s = p0*x;
                     if (s < -0.75) {
-                        y[n] = p1*s + p2;
+                        y = p1*s + p2;
                     }
                     else if (s > 0.75) {
-                        y[n] = p1*s - p2;
+                        y = p1*s - p2;
                     }
                     else {
-                        y[n] = s;
+                        y = s;
                     }
                     break;
 
                 default:
-                    y[n] = x[n];
+                    y = x;
                 }
 
                 // Mix wet and dry signal
-                y[n] = param_mastermix_wet*y[n] + param_mastermix_dry*x[n];
+                y = param_mastermix_wet*y + param_mastermix_dry*x;
 
                 // Apply master volume
-                y[n] *= param_mastervolume_lin;
+                y *= param_mastervolume_lin;
+
+                // Write to output
+                y = outputs[ch][n] = y;
             }
         }
     }

@@ -38,13 +38,23 @@ On Linux for Linux:
 
     make
 
-On OSX for OSX:
+On Linux for Windows with `multiarch/crossbuild`:
 
-    brew install pkg-config
-    make
+    docker pull multiarch/crossbuild
+    docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=x86_64-w64-mingw32  multiarch/crossbuild make WIN32=true
 
-On Linux for Windows:
+On Linux for MacOS with `multiarch/crossbuild`:
+
+    docker pull multiarch/crossbuild
+    docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=x86_64-apple-darwin  multiarch/crossbuild make MACOS=true CXX=c++ CXXFLAGS=-stdlib=libc++
+
+On Linux for Windows with mingw-w64:
 
     sudo apt install mingw-w64
     make WIN32=true CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
+
+On MacOS for MacOS:
+
+    brew install pkg-config
+    make
 
