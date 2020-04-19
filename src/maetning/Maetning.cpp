@@ -24,9 +24,11 @@ START_NAMESPACE_DISTRHO
 #define PARAM_MASTERMIX 3
 
 #define NUM_PARAMS 4
-#define NUM_SATURATIONS 2
+#define NUM_SATURATIONS 4
 #include "sat0.h"
 #include "sat1.h"
+#include "sat2.h"
+#include "sat3.h"
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -250,6 +252,7 @@ protected:
     {
         const float *x;
         float *y;
+        float s;
 
         float p0;
         float p1;
@@ -269,11 +272,26 @@ protected:
             bp = p2 - p1*p2/p0;
             bn = p4 - p3*p4/p0;
             break;
+
         case 1:
             p0 = sat1_coeffs[(int)param_saturation][0];
             p1 = sat1_coeffs[(int)param_saturation][1];
             p2 = sat1_coeffs[(int)param_saturation][2];
             break;
+
+        case 2:
+            p0 = sat2_coeffs[(int)param_saturation][0];
+            p1 = sat2_coeffs[(int)param_saturation][1];
+            p2 = sat2_coeffs[(int)param_saturation][2];
+            p3 = sat2_coeffs[(int)param_saturation][3];
+            break;
+
+        case 3:
+            p0 = sat3_coeffs[(int)param_saturation][0];
+            p1 = sat3_coeffs[(int)param_saturation][1];
+            p2 = sat3_coeffs[(int)param_saturation][2];
+            break;
+
         };
 
         for (uint32_t ch = 0; ch < 2; ch++) {
@@ -296,6 +314,32 @@ protected:
 
                 case 1:
                     y[n] = x[n] / (p1 + p0*std::abs(x[n])) + p2*std::abs(x[n]);
+                    break;
+
+                case 2:
+                    s = p0 * x[n];
+                    if (s < -0.6) {
+                        y[n] = p1*s*s + p2*s + p3;
+                    }
+                    else if (s > 0.6) {
+                        y[n] = (-p1)*s*s + p2*s + (-p3);
+                    }
+                    else {
+                        y[n] = s;
+                    }
+                    break;
+
+                case 3:
+                    s = p0*x[n];
+                    if (s < -0.75) {
+                        y[n] = p1*s + p2;
+                    }
+                    else if (s > 0.75) {
+                        y[n] = p1*s - p2;
+                    }
+                    else {
+                        y[n] = s;
+                    }
                     break;
 
                 default:
