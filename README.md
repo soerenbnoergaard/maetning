@@ -32,7 +32,7 @@ This is the DistMech algorithm from [reverse-camel](https://github.com/soerenbno
 
 Releases are found in the [Github release page](https://github.com/soerenbnoergaard/maetning/releases).
 
-# Building
+## Building
 
 On Linux for Linux:
 
