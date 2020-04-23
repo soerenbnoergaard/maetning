@@ -28,6 +28,14 @@ This is the DistMech algorithm from [reverse-camel](https://github.com/soerenbno
 
 ![Saturation 3](https://raw.githubusercontent.com/soerenbnoergaard/maetning/master/doc/sat3_io.png)
 
+### Saturation 4
+
+![Saturation 4](https://raw.githubusercontent.com/soerenbnoergaard/maetning/master/doc/sat4_io.png)
+
+### Saturation 5
+
+![Saturation 5](https://raw.githubusercontent.com/soerenbnoergaard/maetning/master/doc/sat5_io.png)
+
 ## Download
 
 Releases are found in the [Github release page](https://github.com/soerenbnoergaard/maetning/releases).

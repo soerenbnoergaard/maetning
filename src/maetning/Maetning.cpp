@@ -24,11 +24,13 @@ START_NAMESPACE_DISTRHO
 #define PARAM_MASTERMIX 3
 
 #define NUM_PARAMS 4
-#define NUM_SATURATIONS 4
+#define NUM_SATURATIONS 6
 #include "sat0.h"
 #include "sat1.h"
 #include "sat2.h"
 #include "sat3.h"
+#include "sat4.h"
+#include "sat5.h"
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -259,8 +261,14 @@ protected:
         float p2 = 0.0;
         float p3 = 0.0;
         float p4 = 0.0;
+        float p5 = 0.0;
+        float p6 = 0.0;
+        float p7 = 0.0;
+        float p8 = 0.0;
+        float p9 = 0.0;
         float bp = 0.0;
         float bn = 0.0;
+        float abs_x = 0.0;
 
         switch (param_type_int) {
         case 0:
@@ -290,6 +298,32 @@ protected:
             p0 = sat3_coeffs[(int)param_saturation][0];
             p1 = sat3_coeffs[(int)param_saturation][1];
             p2 = sat3_coeffs[(int)param_saturation][2];
+            break;
+
+        case 4:
+            p0 = sat4_coeffs[(int)param_saturation][0];
+            p1 = sat4_coeffs[(int)param_saturation][1];
+            p2 = sat4_coeffs[(int)param_saturation][2];
+            p3 = sat4_coeffs[(int)param_saturation][3];
+            p4 = sat4_coeffs[(int)param_saturation][4];
+            p5 = sat4_coeffs[(int)param_saturation][5];
+            p6 = sat4_coeffs[(int)param_saturation][6];
+            p7 = sat4_coeffs[(int)param_saturation][7];
+            p8 = sat4_coeffs[(int)param_saturation][8];
+            p9 = sat4_coeffs[(int)param_saturation][9];
+            break;
+
+        case 5:
+            p0 = sat5_coeffs[(int)param_saturation][0];
+            p1 = sat5_coeffs[(int)param_saturation][1];
+            p2 = sat5_coeffs[(int)param_saturation][2];
+            p3 = sat5_coeffs[(int)param_saturation][3];
+            p4 = sat5_coeffs[(int)param_saturation][4];
+            p5 = sat5_coeffs[(int)param_saturation][5];
+            p6 = sat5_coeffs[(int)param_saturation][6];
+            p7 = sat5_coeffs[(int)param_saturation][7];
+            p8 = sat5_coeffs[(int)param_saturation][8];
+            p9 = sat5_coeffs[(int)param_saturation][9];
             break;
 
         };
@@ -338,6 +372,25 @@ protected:
                     }
                     else {
                         y = s;
+                    }
+                    break;
+
+                case 4:
+                case 5:
+                    abs_x = std::abs(x);
+
+                    if (p9 == 0) {
+                        // Low-gain algorithm
+                        y = x / (p0 + p1*abs_x + p2*abs_x*abs_x) + p3*abs_x;
+                    }
+                    else {
+                        // High-gain algorithm
+                        if (x < 0) {
+                            y = x / (p0 + p1*abs_x) + p2*abs_x;
+                        }
+                        else {
+                            y = p3*(p4*x*x + p5*x)/(x*x + p6*x + p7) + p8*x;
+                        }
                     }
                     break;
 

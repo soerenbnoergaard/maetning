@@ -43,7 +43,6 @@ DPF_DIR =../../dpf
 VST_DIR = $(BIN_DIR)/$(NAME).vst
 
 all: $(TARGETS)
-all: $(TARGETS)
 ifeq ($(MACOS),true)
 	cp -r $(DPF_DIR)/utils/plugin.vst/ $(VST_DIR)
 	mv $(BIN_DIR)/$(NAME)-vst.dylib $(VST_DIR)/Contents/MacOS/$(NAME)
