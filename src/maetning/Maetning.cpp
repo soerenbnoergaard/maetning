@@ -125,7 +125,7 @@ protected:
 
         switch (index) {
         case PARAM_SATURATION:
-            parameter.hints  = kParameterIsAutomable | kParameterIsInteger;
+            parameter.hints  = kParameterIsAutomable;
             parameter.name   = "Saturation";
             parameter.symbol = "Saturation";
             parameter.unit   = "%";
@@ -135,7 +135,7 @@ protected:
             break;
 
         case PARAM_TYPE:
-            parameter.hints  = kParameterIsAutomable | kParameterIsInteger;
+            parameter.hints  = kParameterIsAutomable;
             parameter.name   = "Type";
             parameter.symbol = "Type";
             parameter.unit   = "";
@@ -145,7 +145,7 @@ protected:
             break;
 
         case PARAM_MASTERVOLUME:
-            parameter.hints  = kParameterIsAutomable | kParameterIsInteger;
+            parameter.hints  = kParameterIsAutomable;
             parameter.name   = "MasterVolume";
             parameter.symbol = "MasterVolume";
             parameter.unit   = "dB";
@@ -155,7 +155,7 @@ protected:
             break;
 
         case PARAM_MASTERMIX:
-            parameter.hints  = kParameterIsAutomable | kParameterIsInteger;
+            parameter.hints  = kParameterIsAutomable;
             parameter.name   = "MasterMix";
             parameter.symbol = "MasterMix";
             parameter.unit   = "%";
@@ -215,6 +215,7 @@ protected:
         switch (index) {
         case PARAM_SATURATION:
             param_saturation = value;
+            param_saturation_int = (int)value;
             break;
 
         case PARAM_TYPE:
@@ -272,58 +273,58 @@ protected:
 
         switch (param_type_int) {
         case 0:
-            p0 = sat0_coeffs[(int)param_saturation][0];
-            p1 = sat0_coeffs[(int)param_saturation][1];
-            p2 = sat0_coeffs[(int)param_saturation][2];
-            p3 = sat0_coeffs[(int)param_saturation][3];
-            p4 = sat0_coeffs[(int)param_saturation][4];
+            p0 = sat0_coeffs[param_saturation_int][0];
+            p1 = sat0_coeffs[param_saturation_int][1];
+            p2 = sat0_coeffs[param_saturation_int][2];
+            p3 = sat0_coeffs[param_saturation_int][3];
+            p4 = sat0_coeffs[param_saturation_int][4];
             bp = p2 - p1*p2/p0;
             bn = p4 - p3*p4/p0;
             break;
 
         case 1:
-            p0 = sat1_coeffs[(int)param_saturation][0];
-            p1 = sat1_coeffs[(int)param_saturation][1];
-            p2 = sat1_coeffs[(int)param_saturation][2];
+            p0 = sat1_coeffs[param_saturation_int][0];
+            p1 = sat1_coeffs[param_saturation_int][1];
+            p2 = sat1_coeffs[param_saturation_int][2];
             break;
 
         case 2:
-            p0 = sat2_coeffs[(int)param_saturation][0];
-            p1 = sat2_coeffs[(int)param_saturation][1];
-            p2 = sat2_coeffs[(int)param_saturation][2];
-            p3 = sat2_coeffs[(int)param_saturation][3];
+            p0 = sat2_coeffs[param_saturation_int][0];
+            p1 = sat2_coeffs[param_saturation_int][1];
+            p2 = sat2_coeffs[param_saturation_int][2];
+            p3 = sat2_coeffs[param_saturation_int][3];
             break;
 
         case 3:
-            p0 = sat3_coeffs[(int)param_saturation][0];
-            p1 = sat3_coeffs[(int)param_saturation][1];
-            p2 = sat3_coeffs[(int)param_saturation][2];
+            p0 = sat3_coeffs[param_saturation_int][0];
+            p1 = sat3_coeffs[param_saturation_int][1];
+            p2 = sat3_coeffs[param_saturation_int][2];
             break;
 
         case 4:
-            p0 = sat4_coeffs[(int)param_saturation][0];
-            p1 = sat4_coeffs[(int)param_saturation][1];
-            p2 = sat4_coeffs[(int)param_saturation][2];
-            p3 = sat4_coeffs[(int)param_saturation][3];
-            p4 = sat4_coeffs[(int)param_saturation][4];
-            p5 = sat4_coeffs[(int)param_saturation][5];
-            p6 = sat4_coeffs[(int)param_saturation][6];
-            p7 = sat4_coeffs[(int)param_saturation][7];
-            p8 = sat4_coeffs[(int)param_saturation][8];
-            p9 = sat4_coeffs[(int)param_saturation][9];
+            p0 = sat4_coeffs[param_saturation_int][0];
+            p1 = sat4_coeffs[param_saturation_int][1];
+            p2 = sat4_coeffs[param_saturation_int][2];
+            p3 = sat4_coeffs[param_saturation_int][3];
+            p4 = sat4_coeffs[param_saturation_int][4];
+            p5 = sat4_coeffs[param_saturation_int][5];
+            p6 = sat4_coeffs[param_saturation_int][6];
+            p7 = sat4_coeffs[param_saturation_int][7];
+            p8 = sat4_coeffs[param_saturation_int][8];
+            p9 = sat4_coeffs[param_saturation_int][9];
             break;
 
         case 5:
-            p0 = sat5_coeffs[(int)param_saturation][0];
-            p1 = sat5_coeffs[(int)param_saturation][1];
-            p2 = sat5_coeffs[(int)param_saturation][2];
-            p3 = sat5_coeffs[(int)param_saturation][3];
-            p4 = sat5_coeffs[(int)param_saturation][4];
-            p5 = sat5_coeffs[(int)param_saturation][5];
-            p6 = sat5_coeffs[(int)param_saturation][6];
-            p7 = sat5_coeffs[(int)param_saturation][7];
-            p8 = sat5_coeffs[(int)param_saturation][8];
-            p9 = sat5_coeffs[(int)param_saturation][9];
+            p0 = sat5_coeffs[param_saturation_int][0];
+            p1 = sat5_coeffs[param_saturation_int][1];
+            p2 = sat5_coeffs[param_saturation_int][2];
+            p3 = sat5_coeffs[param_saturation_int][3];
+            p4 = sat5_coeffs[param_saturation_int][4];
+            p5 = sat5_coeffs[param_saturation_int][5];
+            p6 = sat5_coeffs[param_saturation_int][6];
+            p7 = sat5_coeffs[param_saturation_int][7];
+            p8 = sat5_coeffs[param_saturation_int][8];
+            p9 = sat5_coeffs[param_saturation_int][9];
             break;
 
         };
@@ -426,6 +427,7 @@ protected:
 private:
 
     float param_saturation;
+    int param_saturation_int;
     float param_type;
     int param_type_int;
     float param_mastervolume;
